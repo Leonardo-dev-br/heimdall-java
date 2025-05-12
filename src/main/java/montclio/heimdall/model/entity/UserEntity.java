@@ -4,12 +4,17 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="TB_HDL_USUARIO")
 public class UserEntity {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ID_USUARIO")
     private Long idUser;
     
