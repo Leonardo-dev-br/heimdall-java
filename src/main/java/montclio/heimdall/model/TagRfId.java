@@ -1,4 +1,4 @@
-package montclio.heimdall.model.entity;
+package montclio.heimdall.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="TB_HDL_TAG_IDENTIFICACAO")
-public class TagIdEntity {
+public class TagRfId {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
