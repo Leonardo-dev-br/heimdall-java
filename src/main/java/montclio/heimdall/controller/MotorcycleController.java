@@ -61,7 +61,7 @@ public class MotorcycleController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deleteMotorcycle (@PathVariable Long id){
-     motorcycleService.deletMotorcycle(id);
+     motorcycleService.deleteMotorcycle(id);
      return  ResponseEntity.noContent().build();
     }
 

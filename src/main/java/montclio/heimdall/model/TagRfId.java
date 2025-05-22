@@ -1,72 +1,58 @@
 package montclio.heimdall.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import montclio.heimdall.dto.PostTagRfidDTO;
+import montclio.heimdall.dto.PutTagRfidDTO;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="TB_HDL_TAG_IDENTIFICACAO")
 public class TagRfId {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ID_TAG_RFID")
-    private Long idTagId;
+    private Long id;
+    private String frequencia;
+    private String banda;
+    private String aplicacao;
+    @JoinColumn(name = "motorcycle_id", referencedColumnName = "id", unique = true)
+    private Motorcycle motorcycle;
 
-    
-    @Column(name="FAIXA_FREQUENCIA")
-    private String frequencyBands;
+    // Construtor que recebe um DTO para criação
+    public TagRfId(PostTagRfidDTO dto) {
+        this.id = dto.id();
+        this.frequencia = dto.frequencia();
+        this.banda = dto.banda();
+        this.aplicacao = dto.aplicacao();
 
-    
-    @Column(name="BANDA")
-    private String band;
-
-    
-    @Column(name="ALCANCE")
-    private float range;
-
-    
-    @Column(name="APLICACAO")
-    private String aplication;
-
-    public Long getIdTagId() {
-        return idTagId;
+        if (dto.motorcycle() != null) {
+            this.motorcycle = dto.motorcycle();
+            this.motorcycle.setTag(this);
+        }
     }
 
-    public String getFrequencyBands() {
-        return frequencyBands;
+    // Método para atualizar os dados baseado em um DTO de update
+    public void updateData(PutTagRfidDTO dto) {
+        if (dto.frequencia() != null) {
+            this.frequencia = dto.frequencia();
+        }
+        if (dto.banda() != null) {
+            this.banda = dto.banda();
+        }
+        if (dto.aplicacao() != null) {
+            this.aplicacao = dto.aplicacao();
+        }
+        if (dto.motorcycle() != null) {
+            this.motorcycle = dto.motorcycle();
+            this.motorcycle.setTag(this);
+        }
     }
-
-    public void setFrequencyBands(String frequencyBands) {
-        this.frequencyBands = frequencyBands;
-    }
-
-    public String getBand() {
-        return band;
-    }
-
-    public void setBand(String band) {
-        this.band = band;
-    }
-
-    public float getRange() {
-        return range;
-    }
-
-    public void setRange(float range) {
-        this.range = range;
-    }
-
-    public String getAplication() {
-        return aplication;
-    }
-
-    public void setAplication(String aplication) {
-        this.aplication = aplication;
-    }
-
 
 }

@@ -4,6 +4,7 @@ import montclio.heimdall.dto.GetMotorcycleDTO;
 import montclio.heimdall.dto.PostMotorcycleDTO;
 import montclio.heimdall.dto.PutMotorcycleDTO;
 import montclio.heimdall.model.Motorcycle;
+import montclio.heimdall.model.TagRfId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,6 @@ public class MotorcycleService {
     //Cadastra uma nova moto
     public void postMotorcycle(PostMotorcycleDTO motorcycleDTO){
         Motorcycle motorcycle = new Motorcycle(motorcycleDTO);
-        System.out.println(motorcycle);
         motocycleRepository.save(motorcycle);
     }
 
@@ -42,7 +42,13 @@ public class MotorcycleService {
     }
 
     //Deleta uma moto
-    public void deletMotorcycle (Long id){
+    public void deleteMotorcycle (Long id){
+        Motorcycle moto = motocycleRepository.findById(id).orElseThrow(()-> new RuntimeException("Moto não encontrada"));
+        TagRfId tag = moto.getTag();
+        if(tag.getMotorcycle()!= null){
+            tag.setMotorcycle(null);
+        }
+        moto.setTag(null);
         motocycleRepository.deleteById(id);
     }
 
