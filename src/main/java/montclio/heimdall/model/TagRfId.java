@@ -1,8 +1,6 @@
 package montclio.heimdall.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +20,7 @@ public class TagRfId {
     private String frequencia;
     private String banda;
     private String aplicacao;
+    @OneToOne
     @JoinColumn(name = "motorcycle_id", referencedColumnName = "id", unique = true)
     private Motorcycle motorcycle;
 

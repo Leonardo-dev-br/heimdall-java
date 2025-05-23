@@ -1,6 +1,5 @@
 package montclio.heimdall.dto;
 
-import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.TagRfId;
 
 public record GetTagRfidDTO(
