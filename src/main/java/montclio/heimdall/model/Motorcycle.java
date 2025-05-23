@@ -49,11 +49,10 @@ public class Motorcycle {
             this.motorcycleType = dto.motorcycleType();
         }
         if (dto.tagId() != null) {
-            if (this.tag == null) {
-                this.tag = new TagRfId();
-            }
-            this.tag.setId(dto.tagId());
-            this.tag.setMotorcycle(this);
+            TagRfId tag = new TagRfId();
+            tag.setId(dto.tagId());
+            tag.setMotorcycle(this);   // RELAÇÃO sendo "setada" do lado correto
+            this.tag = tag;
         }
     }
 }

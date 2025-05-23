@@ -10,6 +10,7 @@ import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.TagRfId;
 import montclio.heimdall.repository.TagRfidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public class TagRfidService {
 @Autowired
     private TagRfidRepository tagRfidRepository;
 
+@Autowired
+private CacheManager cacheManager;
 
     //retorna todas as tags cadastradas
     @Cacheable(value = "tags")
@@ -51,13 +54,29 @@ public class TagRfidService {
     }
 
 
-    //Atualiza tag
     @Transactional
     @CacheEvict(value = {"tags", "tagById"}, allEntries = true)
     public void putTag(Long id, PutTagRfidDTO tagDTO){
-        var tag = tagRfidRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tag com ID " + id + " não encontrada"));
-        tag.updateData(tagDTO);
+        var tag = tagRfidRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tag com ID " + id + " não encontrada"));
+
+        Motorcycle oldMoto = tag.getMotorcycle();
+        tag.updateData(tagDTO); // Aqui é onde a nova moto é ligada
+
+        if (oldMoto != null) {
+            cacheManager.getCache("motorcycleById").evict(oldMoto.getId());
+            cacheManager.getCache("motorcycles").clear();
+        }
+
+        Motorcycle newMoto = tag.getMotorcycle();
+        if (newMoto != null) {
+            cacheManager.getCache("motorcycleById").evict(newMoto.getId());
+            cacheManager.getCache("motorcycles").clear();
+        }
     }
+
+
+
 
     //Deleta uma tag
     @Transactional
