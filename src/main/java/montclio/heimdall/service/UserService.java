@@ -58,6 +58,11 @@ public class UserService {
         if (exist){
             throw new DataConflictException("Esse e-mail já está sendo usado por outro usuário");
         }
+
+        if (userRepository.existsByCpf(dto.cpf())) {
+            throw new DataConflictException("Esse CPF ja esta cadastrado");
+        }
+
         UserCategory category = categoryRepository.findById(dto.userCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria com id: " + dto.userCategoryId() + " não encontrada."));
         User user = new User();
@@ -79,6 +84,10 @@ public class UserService {
         if (userRepository.existsByEmailAndIdNot(userDTO.email(), id)) {
             throw new DataConflictException("Esse e-mail já está sendo usado por outro usuário");
         }
+        if (userRepository.existsByCpfAndIdNot(userDTO.cpf(), id)) {
+            throw new DataConflictException("Esse CPF ja esta cadastrado");
+        }
+
         user.updateData(userDTO);
     }
 

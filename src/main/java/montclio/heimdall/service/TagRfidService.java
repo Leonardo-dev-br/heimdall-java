@@ -76,14 +76,17 @@ public class TagRfidService {
         @CacheEvict(value = {"tags", "tagById"}, allEntries = true)
         public void putTag(Long id, PutTagRfidDTO tagDTO){
             Long motoId = tagDTO.motorcycle().getId();
+
             var tag = tagRfidRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Tag com ID " + id + " não encontrada"));
+
             // Verifica se a moto existe
             var moto = motorcycleRepository.findById(motoId)
                     .orElseThrow(() -> new ResourceNotFoundException("Moto com ID " + motoId + " não encontrada"));
 
+
             // Verifica se já existe tag para essa moto
-            boolean exists = tagRfidRepository.existsByMotorcycleId(motoId);
+            boolean exists = tagRfidRepository.existsByMotorcycleAndIdNot(moto, id);
             if (exists) {
                 throw new DataConflictException("A tag para esta motocicleta já existe.");
             }
@@ -93,14 +96,13 @@ public class TagRfidService {
 
             if (oldMoto != null) {
                 cacheManager.getCache("motorcycleById").evict(oldMoto.getId());
-                cacheManager.getCache("motorcycles").clear();
             }
 
             Motorcycle newMoto = tag.getMotorcycle();
             if (newMoto != null) {
                 cacheManager.getCache("motorcycleById").evict(newMoto.getId());
-                cacheManager.getCache("motorcycles").clear();
             }
+            cacheManager.getCache("motorcycles").clear();
         }
 
 
