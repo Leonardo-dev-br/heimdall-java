@@ -1,4 +1,4 @@
-package montclio.heimdall.dto;
+package montclio.heimdall.dto.TagRfidDTO;
 
 public record TagRfidFilter(
         String frequencia,

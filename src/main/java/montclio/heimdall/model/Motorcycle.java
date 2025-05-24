@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import montclio.heimdall.dto.PostMotorcycleDTO;
-import montclio.heimdall.dto.PutMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.PostMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.PutMotorcycleDTO;
 
 @Data
 @AllArgsConstructor
@@ -13,8 +13,6 @@ import montclio.heimdall.dto.PutMotorcycleDTO;
 @Entity
 @Table(name="TB_HDL_MOTO")
 public class Motorcycle {
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +36,6 @@ public class Motorcycle {
             this.tag = tag;
         }
     }
-
-
 
     public void updateData(PutMotorcycleDTO dto) {
         if (dto.plate() != null) {

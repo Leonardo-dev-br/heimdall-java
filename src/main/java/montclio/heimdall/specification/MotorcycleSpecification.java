@@ -1,9 +1,9 @@
 package montclio.heimdall.specification;
 
 import jakarta.persistence.criteria.Predicate;
-import montclio.heimdall.dto.MotorcycleFilter;
+import montclio.heimdall.dto.MotorcycleDTO.MotorcycleFilter;
 import montclio.heimdall.model.Motorcycle;
-import montclio.heimdall.model.fields.MotorcycleFields;
+import montclio.heimdall.constants.MotorcycleFields;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

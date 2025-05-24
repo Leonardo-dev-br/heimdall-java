@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
-import montclio.heimdall.dto.PostUserDTO;
-import montclio.heimdall.dto.PutUserDTO;
+import montclio.heimdall.dto.UserDTO.PostUserDTO;
+import montclio.heimdall.dto.UserDTO.PutUserDTO;
 
 
 @Data
@@ -20,7 +20,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String middleName;
     private LocalDate birthday;
@@ -31,7 +30,6 @@ public class User {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @JsonIgnoreProperties("users") // Ignora a propriedade 'users' em UserCategory durante a serialização para JSON
     private UserCategory userCategory;
-
 
     public User(PostUserDTO dto) {
         this.name = dto.name();

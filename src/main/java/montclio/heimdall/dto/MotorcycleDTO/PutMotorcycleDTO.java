@@ -1,11 +1,9 @@
-package montclio.heimdall.dto;
+package montclio.heimdall.dto.MotorcycleDTO;
 
 import montclio.heimdall.model.MotorcycleType;
-import montclio.heimdall.model.TagRfId;
 
-public record MotorcycleFilter(
+public record PutMotorcycleDTO(
         String plate,
-        String chassiNumber,
         MotorcycleType motorcycleType,
         Long tagId
 ) {

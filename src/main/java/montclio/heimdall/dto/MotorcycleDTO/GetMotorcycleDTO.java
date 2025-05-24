@@ -1,5 +1,6 @@
-package montclio.heimdall.dto;
+package montclio.heimdall.dto.MotorcycleDTO;
 
+import montclio.heimdall.dto.TagRfidDTO.GetTagRfidDTO;
 import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.MotorcycleType;
 

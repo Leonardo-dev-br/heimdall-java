@@ -1,14 +1,15 @@
 package montclio.heimdall.service;
 
 import jakarta.transaction.Transactional;
-import montclio.heimdall.dto.GetTagRfidDTO;
-import montclio.heimdall.dto.PostTagRfidDTO;
-import montclio.heimdall.dto.PutTagRfidDTO;
-import montclio.heimdall.dto.TagRfidFilter;
+import montclio.heimdall.dto.TagRfidDTO.GetTagRfidDTO;
+import montclio.heimdall.dto.TagRfidDTO.PostTagRfidDTO;
+import montclio.heimdall.dto.TagRfidDTO.PutTagRfidDTO;
+import montclio.heimdall.dto.TagRfidDTO.TagRfidFilter;
 import montclio.heimdall.exception.DataConflictException;
 import montclio.heimdall.exception.ResourceNotFoundException;
 import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.TagRfId;
+import montclio.heimdall.repository.MotorcycleRepository;
 import montclio.heimdall.repository.TagRfidRepository;
 import montclio.heimdall.specification.TagRfidSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class TagRfidService {
 
-@Autowired
+    @Autowired
     private TagRfidRepository tagRfidRepository;
 
-@Autowired
-private CacheManager cacheManager;
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
+    private MotorcycleRepository motorcycleRepository;
 
     //retorna todas as tags cadastradas
     public Page<GetTagRfidDTO> getAllTags(TagRfidFilter filter, Pageable page){
@@ -46,37 +50,58 @@ private CacheManager cacheManager;
     //Cadastra nova tag
     @Transactional
     @CacheEvict(value = "tags", allEntries = true)
-    public TagRfId postTag(PostTagRfidDTO tagDTO){
-        boolean exists = tagRfidRepository.existsByMotorcycleId(tagDTO.motorcycle().getId());
+    public TagRfId postTag(PostTagRfidDTO tagDTO) {
+        Long motoId = tagDTO.motorcycle().getId();
+
+        // Verifica se a moto existe
+        var moto = motorcycleRepository.findById(motoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Moto com ID " + motoId + " não encontrada"));
+
+        // Verifica se já existe tag para essa moto
+        boolean exists = tagRfidRepository.existsByMotorcycleId(motoId);
         if (exists) {
             throw new DataConflictException("A tag para esta motocicleta já existe.");
         }
 
+        // Cria nova tag com a moto válida
         TagRfId tagRfid = new TagRfId(tagDTO);
+        tagRfid.setMotorcycle(moto);
+
         return tagRfidRepository.save(tagRfid);
     }
 
 
-    @Transactional
-    @CacheEvict(value = {"tags", "tagById"}, allEntries = true)
-    public void putTag(Long id, PutTagRfidDTO tagDTO){
-        var tag = tagRfidRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tag com ID " + id + " não encontrada"));
+        //Atualiza Tag
+        @Transactional
+        @CacheEvict(value = {"tags", "tagById"}, allEntries = true)
+        public void putTag(Long id, PutTagRfidDTO tagDTO){
+            Long motoId = tagDTO.motorcycle().getId();
+            var tag = tagRfidRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Tag com ID " + id + " não encontrada"));
+            // Verifica se a moto existe
+            var moto = motorcycleRepository.findById(motoId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Moto com ID " + motoId + " não encontrada"));
 
-        Motorcycle oldMoto = tag.getMotorcycle();
-        tag.updateData(tagDTO); // Aqui é onde a nova moto é ligada
+            // Verifica se já existe tag para essa moto
+            boolean exists = tagRfidRepository.existsByMotorcycleId(motoId);
+            if (exists) {
+                throw new DataConflictException("A tag para esta motocicleta já existe.");
+            }
 
-        if (oldMoto != null) {
-            cacheManager.getCache("motorcycleById").evict(oldMoto.getId());
-            cacheManager.getCache("motorcycles").clear();
+            Motorcycle oldMoto = tag.getMotorcycle();
+            tag.updateData(tagDTO); // Aqui é onde a nova moto é ligada
+
+            if (oldMoto != null) {
+                cacheManager.getCache("motorcycleById").evict(oldMoto.getId());
+                cacheManager.getCache("motorcycles").clear();
+            }
+
+            Motorcycle newMoto = tag.getMotorcycle();
+            if (newMoto != null) {
+                cacheManager.getCache("motorcycleById").evict(newMoto.getId());
+                cacheManager.getCache("motorcycles").clear();
+            }
         }
-
-        Motorcycle newMoto = tag.getMotorcycle();
-        if (newMoto != null) {
-            cacheManager.getCache("motorcycleById").evict(newMoto.getId());
-            cacheManager.getCache("motorcycles").clear();
-        }
-    }
 
 
 

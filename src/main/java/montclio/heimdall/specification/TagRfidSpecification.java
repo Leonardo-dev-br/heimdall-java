@@ -1,9 +1,9 @@
 package montclio.heimdall.specification;
 
 import jakarta.persistence.criteria.Predicate;
-import montclio.heimdall.dto.TagRfidFilter;
+import montclio.heimdall.dto.TagRfidDTO.TagRfidFilter;
 import montclio.heimdall.model.TagRfId;
-import montclio.heimdall.model.fields.TagRfIdFields;
+import montclio.heimdall.constants.TagRfIdFields;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

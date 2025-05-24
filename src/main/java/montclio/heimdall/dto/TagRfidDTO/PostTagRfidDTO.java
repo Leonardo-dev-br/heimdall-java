@@ -1,4 +1,4 @@
-package montclio.heimdall.dto;
+package montclio.heimdall.dto.TagRfidDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import montclio.heimdall.model.Motorcycle;

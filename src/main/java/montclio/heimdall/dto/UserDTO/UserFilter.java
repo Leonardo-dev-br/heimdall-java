@@ -1,6 +1,4 @@
-package montclio.heimdall.dto;
-
-import montclio.heimdall.model.UserCategory;
+package montclio.heimdall.dto.UserDTO;
 
 public record UserFilter(
         String name,

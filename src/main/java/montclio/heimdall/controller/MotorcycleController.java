@@ -2,10 +2,10 @@ package montclio.heimdall.controller;
 
 
 import jakarta.validation.Valid;
-import montclio.heimdall.dto.GetMotorcycleDTO;
-import montclio.heimdall.dto.MotorcycleFilter;
-import montclio.heimdall.dto.PostMotorcycleDTO;
-import montclio.heimdall.dto.PutMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.GetMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.MotorcycleFilter;
+import montclio.heimdall.dto.MotorcycleDTO.PostMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.PutMotorcycleDTO;
 import montclio.heimdall.model.Motorcycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ public class MotorcycleController {
 
     // Pegar as Motos cadastradas
     @GetMapping
-    public ResponseEntity<Page<GetMotorcycleDTO>> getAllMotocycles(MotorcycleFilter filter, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page) {
+    public ResponseEntity<Page<GetMotorcycleDTO>> getAllMotorcycles(MotorcycleFilter filter, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page) {
         return ResponseEntity.ok(motorcycleService.getAllMotorcycles(filter, page));
     }
 
@@ -42,20 +42,20 @@ public class MotorcycleController {
 
     //Cadastrar uma nova moto
     @PostMapping
-    public ResponseEntity<Void> postMotorcycle(@Valid @RequestBody PostMotorcycleDTO motorcycleDTO){
+    public ResponseEntity<Void> createMotorcycle(@Valid @RequestBody PostMotorcycleDTO motorcycleDTO){
         Motorcycle savedMotorcycle = motorcycleService.postMotorcycle(motorcycleDTO);
         return ResponseEntity.created(URI.create("/motorcycles/" + savedMotorcycle.getId())).build();
     }
 
     //Atualizar uma moto
     @PutMapping("/{id}")
-    public ResponseEntity<Void> putMotorcycle( @PathVariable Long id, @Valid @RequestBody PutMotorcycleDTO motorcycleDTO){
+    public ResponseEntity<Void> updateMotorcycle( @PathVariable Long id, @Valid @RequestBody PutMotorcycleDTO motorcycleDTO){
         motorcycleService.putMotorcycle(id, motorcycleDTO);
         return ResponseEntity.noContent().build();
     }
     //Deletar uma moto
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMotorcycle (@PathVariable Long id){
+    public ResponseEntity<Void> deleteMotorcycleById(@PathVariable Long id){
      motorcycleService.deleteMotorcycle(id);
      return  ResponseEntity.noContent().build();
     }

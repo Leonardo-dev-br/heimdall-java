@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import montclio.heimdall.dto.PostTagRfidDTO;
-import montclio.heimdall.dto.PutTagRfidDTO;
+import montclio.heimdall.dto.TagRfidDTO.PostTagRfidDTO;
+import montclio.heimdall.dto.TagRfidDTO.PutTagRfidDTO;
 
 @Data
 @AllArgsConstructor

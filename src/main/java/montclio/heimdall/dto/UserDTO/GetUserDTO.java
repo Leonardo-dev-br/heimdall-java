@@ -1,4 +1,4 @@
-package montclio.heimdall.dto;
+package montclio.heimdall.dto.UserDTO;
 
 import java.time.LocalDate;
 

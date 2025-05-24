@@ -1,10 +1,10 @@
 package montclio.heimdall.service;
 
 import jakarta.transaction.Transactional;
-import montclio.heimdall.dto.GetUserDTO;
-import montclio.heimdall.dto.PostUserDTO;
-import montclio.heimdall.dto.PutUserDTO;
-import montclio.heimdall.dto.UserFilter;
+import montclio.heimdall.dto.UserDTO.GetUserDTO;
+import montclio.heimdall.dto.UserDTO.PostUserDTO;
+import montclio.heimdall.dto.UserDTO.PutUserDTO;
+import montclio.heimdall.dto.UserDTO.UserFilter;
 import montclio.heimdall.exception.DataConflictException;
 import montclio.heimdall.exception.ResourceNotFoundException;
 import montclio.heimdall.model.User;

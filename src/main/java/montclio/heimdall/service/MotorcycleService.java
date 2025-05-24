@@ -1,10 +1,10 @@
 package montclio.heimdall.service;
 
 import jakarta.transaction.Transactional;
-import montclio.heimdall.dto.GetMotorcycleDTO;
-import montclio.heimdall.dto.MotorcycleFilter;
-import montclio.heimdall.dto.PostMotorcycleDTO;
-import montclio.heimdall.dto.PutMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.GetMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.MotorcycleFilter;
+import montclio.heimdall.dto.MotorcycleDTO.PostMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleDTO.PutMotorcycleDTO;
 import montclio.heimdall.exception.ResourceNotFoundException;
 import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.TagRfId;

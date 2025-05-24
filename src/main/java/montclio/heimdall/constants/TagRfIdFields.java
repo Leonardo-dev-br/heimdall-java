@@ -1,4 +1,4 @@
-package montclio.heimdall.model.fields;
+package montclio.heimdall.constants;
 
 public class TagRfIdFields {
     public static final String ID = "id";

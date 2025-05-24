@@ -1,9 +1,9 @@
 package montclio.heimdall.specification;
 
 import jakarta.persistence.criteria.Predicate;
-import montclio.heimdall.dto.UserFilter;
+import montclio.heimdall.dto.UserDTO.UserFilter;
 import montclio.heimdall.model.User;
-import montclio.heimdall.model.fields.UserFields;
+import montclio.heimdall.constants.UserFields;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

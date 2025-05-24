@@ -1,4 +1,4 @@
-package montclio.heimdall.model.fields;
+package montclio.heimdall.constants;
 
 public class MotorcycleFields {
     public static final String ID = "id";
