@@ -49,33 +49,7 @@ O HEIMDALL é um Sistema de Mapeamento e Monitoramento Inteligente de Vagas, que
 
   - O sistema atualiza um mapa digital em tempo real, acessível via Web ou App.
 
-# Estrutura do projeto
- 📁 Estrutura de Pastas 
 
-```
-heimdall-api/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── heimdall/
-│   │   │           ├── controller/       # Endpoints da API (camada de apresentação)
-│   │   │           ├── service/          # Regras de negócio
-│   │   │           ├── model/            # Entidades JPA (Moto, Vaga, etc.)
-│   │   │           ├── repository/       # Interfaces de acesso ao banco (JPA)
-│   │   │           ├── exception/        # Tratamento global de exceções
-│   │   │           ├── config/           # Configurações gerais da aplicação (ex: CORS, Swagger, etc)
-│   │   │           ├── dto/              # Data Transfer Objects (entrada/saída da API)
-│   │   │           ├── specifications/   # Filtros dinâmicos para consultas (Criteria API)
-│   │   │           ├── constants/        # Constantes reutilizáveis na aplicação
-│   │   │           └── HeimdallApi.java  # Classe principal (ponto de entrada)
-│   │   └── resources/
-│   │       ├── application.properties    # Configurações de banco, portas, etc
-│   │       ├── static/                   # (Opcional) arquivos estáticos
-│   │       └── templates/                # (Opcional) templates HTML (caso use Thymeleaf)
-├── pom.xml                               # Gerenciador de dependências Maven
-└── README.md                             # Documentação do projeto
-```
 
 ## ⚙️ Tecnologias Utilizadas
 
@@ -88,6 +62,70 @@ heimdall-api/
 - Migrations com flyway
 - Maven
 
+
+## Estrutura do projeto
+### 📁 Estrutura de Pastas
+
+```
+heimdall-java/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── heimdall/
+│   │   │           ├── controller/                # Endpoints da API (camada de apresentação)
+│   │   │           ├── service/                   # Regras de negócio
+│   │   │           ├── model/                     # Entidades JPA (Moto, Vaga, etc.)
+│   │   │           ├── repository/                # Interfaces de acesso ao banco (JPA)
+│   │   │           ├── exception/                 # Tratamento global de exceções
+│   │   │           ├── config/                    # Configurações gerais da aplicação (ex: CORS, Swagger, etc)
+│   │   │           ├── dto/                       # Data Transfer Objects (entrada/saída da API)
+│   │   │           ├── specifications/            # Filtros dinâmicos para consultas (Criteria API)
+│   │   │           ├── constants/                 # Constantes reutilizáveis na aplicação
+│   │   │           └── HeimdallApplication.java   # Classe principal (ponto de entrada)
+│   │   └── resources/
+│   │       ├── application.properties             # Configurações de banco, portas, etc
+│   │       └── db
+│   │           └── migrations/                    # Contem arquivos para criação de tabelas do banco de dados          
+├── pom.xml                                        # Gerenciador de dependências Maven
+└── README.md                                      # Documentação do projeto
+```
+
+## 🧭 Endpoints da API
+
+### 🏍️ Motos (`/motorcycles`)
+| Método | Endpoint                | Descrição                                     |
+|--------|-------------------------|-----------------------------------------------|
+| GET    | /motorcycles            | Lista todas as motos (com filtros e paginação)|
+| GET    | /motorcycles/{id}       | Retorna uma moto específica por ID            |
+| POST   | /motorcycles            | Cadastra uma nova moto                        |
+| PUT    | /motorcycles/{id}       | Atualiza os dados de uma moto                 |
+| DELETE | /motorcycles/{id}       | Remove uma moto pelo ID                       |
+
+---
+
+### 🏷️ Tags RFID (`/tags`)
+| Método | Endpoint            | Descrição                                     |
+|--------|---------------------|-----------------------------------------------|
+| GET    | /tags               | Lista todas as tags (com filtros e paginação) |
+| GET    | /tags/{id}          | Retorna uma tag específica por ID             |
+| POST   | /tags               | Cadastra uma nova tag RFID                    |
+| PUT    | /tags/{id}          | Atualiza os dados de uma tag RFID             |
+| DELETE | /tags/{id}          | Remove uma tag pelo ID                        |
+
+---
+
+### 👤 Usuários (`/users`)
+| Método | Endpoint            | Descrição                                     |
+|--------|---------------------|-----------------------------------------------|
+| GET    | /users              | Lista todos os usuários (com filtros e paginação)|
+| GET    | /users/{id}         | Retorna um usuário específico por ID          |
+| POST   | /users              | Cadastra um novo usuário                      |
+| PUT    | /users/{id}         | Atualiza os dados de um usuário               |
+| DELETE | /users/{id}         | Remove um usuário pelo ID                     |
+
+---
+
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
@@ -95,5 +133,40 @@ heimdall-api/
 - Java 21 instalado
 - Maven 3.8+ instalado
 - IDE (IntelliJ, Eclipse, VS Code) — opcional, mas recomendado
-
+- Banco de Dados Oracle configurado
 ---
+
+### ⚙️ Configuração do Banco de Dados
+Antes de rodar a aplicação, configure sua conexão com o banco de dados, colocando seu usuario e senha do banco de dados Oracle no arquivo:
+```
+src/main/resources/application.properties
+```
+
+### Rodando o projeto
+
+```bash
+# Clone o repositório
+git clone https://github.com/Leonardo-dev-br/heimdall-java.git
+
+# Acesse o diretório
+cd heimdall-java
+
+# Compile o projeto
+mvn clean install
+
+# Rode a aplicação
+mvn spring-boot:run
+```
+
+A API estará disponível em:
+
+```
+http://localhost:8080
+```
+## Integrantes
+
+| Nome Completo               | RM       |
+|-----------------------------|----------|
+| Pedro Henrique Lima Santos  | 558243   |
+| Vitor Gomes Martins         | 558244   |
+| Leonardo Pimentel Santos    | 557541   |
