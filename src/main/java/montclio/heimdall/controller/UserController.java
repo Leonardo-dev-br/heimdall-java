@@ -1,5 +1,7 @@
 package montclio.heimdall.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import montclio.heimdall.dto.UserDTO.GetUserDTO;
 import montclio.heimdall.dto.UserDTO.PostUserDTO;
@@ -19,41 +21,57 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Usuários", description = "Operações relacionadas aos usuários do sistema")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    // Listar todos os usuários com paginação e filtros de pesquisas
     @GetMapping
+    @Operation(
+            summary = "Listar todos os usuários",
+            description = "Lista paginada de usuários cadastrados, com suporte a filtros."
+    )
     public ResponseEntity<Page<GetUserDTO>> getAllUsers(
             UserFilter filter,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page) {
         return ResponseEntity.ok(userService.getAllUsers(filter, page));
     }
 
-    // Buscar usuário por ID
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Buscar usuário por ID",
+            description = "Retorna os dados de um usuário específico a partir do seu ID."
+    )
     public ResponseEntity<GetUserDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    // Cadastrar novo usuário
     @PostMapping
+    @Operation(
+            summary = "Cadastrar um novo usuário",
+            description = "Cria um novo usuário no sistema com os dados fornecidos."
+    )
     public ResponseEntity<Void> createUser(@RequestBody @Valid PostUserDTO dto) {
         User savedUser = userService.postUser(dto);
-        return ResponseEntity.created(URI.create("/users/"+savedUser.getId())).build();
+        return ResponseEntity.created(URI.create("/users/" + savedUser.getId())).build();
     }
 
-    // Atualizar usuário
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Atualizar um usuário",
+            description = "Atualiza os dados de um usuário existente com base no ID."
+    )
     public ResponseEntity<Void> updateUser(@RequestBody @Valid PutUserDTO dto, @PathVariable Long id) {
         userService.putUser(id, dto);
         return ResponseEntity.noContent().build();
     }
 
-    // Deletar usuário
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Deletar um usuário",
+            description = "Remove um usuário do sistema com base no ID fornecido."
+    )
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
