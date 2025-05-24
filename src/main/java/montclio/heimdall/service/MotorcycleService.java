@@ -2,16 +2,19 @@ package montclio.heimdall.service;
 
 import jakarta.transaction.Transactional;
 import montclio.heimdall.dto.GetMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleFilter;
 import montclio.heimdall.dto.PostMotorcycleDTO;
 import montclio.heimdall.dto.PutMotorcycleDTO;
 import montclio.heimdall.exception.ResourceNotFoundException;
 import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.TagRfId;
+import montclio.heimdall.specification.MotorcycleSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import montclio.heimdall.repository.MotorcycleRepository;
 
@@ -21,9 +24,9 @@ public class MotorcycleService {
     private MotorcycleRepository motorcycleRepository;
 
     //Retorna todas as motos cadastradas
-    @Cacheable (value = "motorcycles")
-    public Page<GetMotorcycleDTO> getAllMotocycles(Pageable page) {
-        return motorcycleRepository.findAll(page).map(GetMotorcycleDTO::new);
+    public Page<GetMotorcycleDTO> getAllMotorcycles(MotorcycleFilter filter, Pageable page) {
+        Specification<Motorcycle> spec = MotorcycleSpecification.withFilter(filter);
+        return motorcycleRepository.findAll(spec, page).map(GetMotorcycleDTO::new);
     }
 
     //Retorna moto por id

@@ -4,17 +4,20 @@ import jakarta.transaction.Transactional;
 import montclio.heimdall.dto.GetUserDTO;
 import montclio.heimdall.dto.PostUserDTO;
 import montclio.heimdall.dto.PutUserDTO;
+import montclio.heimdall.dto.UserFilter;
 import montclio.heimdall.exception.DataConflictException;
 import montclio.heimdall.exception.ResourceNotFoundException;
 import montclio.heimdall.model.User;
 import montclio.heimdall.model.UserCategory;
 import montclio.heimdall.repository.UserCategoryRepository;
 import montclio.heimdall.repository.UserRepository;
+import montclio.heimdall.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -32,10 +35,10 @@ public class UserService {
     @Autowired
     private UserCategoryRepository categoryRepository;
 
-    // Retorna todos os usuários cadastrados
-    @Cacheable(value = "users")
-    public Page<GetUserDTO> getAllUsers(Pageable page) {
-        return userRepository.findAll(page).map(GetUserDTO::new);
+
+    public Page<GetUserDTO> getAllUsers(UserFilter filter, Pageable page) {
+        Specification<User> spec = UserSpecification.withFilter(filter);
+        return userRepository.findAll(spec, page).map(GetUserDTO::new);
     }
 
     // Retorna usuário por ID

@@ -3,6 +3,7 @@ package montclio.heimdall.controller;
 
 import jakarta.validation.Valid;
 import montclio.heimdall.dto.GetMotorcycleDTO;
+import montclio.heimdall.dto.MotorcycleFilter;
 import montclio.heimdall.dto.PostMotorcycleDTO;
 import montclio.heimdall.dto.PutMotorcycleDTO;
 import montclio.heimdall.model.Motorcycle;
@@ -29,8 +30,8 @@ public class MotorcycleController {
 
     // Pegar as Motos cadastradas
     @GetMapping
-    public ResponseEntity<Page<GetMotorcycleDTO>> getAllMotocycles(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page) {
-        return ResponseEntity.ok(motorcycleService.getAllMotocycles(page));
+    public ResponseEntity<Page<GetMotorcycleDTO>> getAllMotocycles(MotorcycleFilter filter, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page) {
+        return ResponseEntity.ok(motorcycleService.getAllMotorcycles(filter, page));
     }
 
     // Pegar uma Moto cadastrada pelo id

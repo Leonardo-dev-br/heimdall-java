@@ -4,17 +4,20 @@ import jakarta.transaction.Transactional;
 import montclio.heimdall.dto.GetTagRfidDTO;
 import montclio.heimdall.dto.PostTagRfidDTO;
 import montclio.heimdall.dto.PutTagRfidDTO;
+import montclio.heimdall.dto.TagRfidFilter;
 import montclio.heimdall.exception.DataConflictException;
 import montclio.heimdall.exception.ResourceNotFoundException;
 import montclio.heimdall.model.Motorcycle;
 import montclio.heimdall.model.TagRfId;
 import montclio.heimdall.repository.TagRfidRepository;
+import montclio.heimdall.specification.TagRfidSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
@@ -28,9 +31,9 @@ public class TagRfidService {
 private CacheManager cacheManager;
 
     //retorna todas as tags cadastradas
-    @Cacheable(value = "tags")
-    public Page<GetTagRfidDTO> getAllTags(Pageable page){
-        return tagRfidRepository.findAll(page).map(GetTagRfidDTO::new);
+    public Page<GetTagRfidDTO> getAllTags(TagRfidFilter filter, Pageable page){
+        Specification<TagRfId> spec = TagRfidSpecification.withFilter(filter);
+        return tagRfidRepository.findAll(spec, page).map(GetTagRfidDTO::new);
     }
 
     //retorna tag por id

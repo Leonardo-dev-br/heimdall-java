@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import montclio.heimdall.dto.GetTagRfidDTO;
 import montclio.heimdall.dto.PostTagRfidDTO;
 import montclio.heimdall.dto.PutTagRfidDTO;
+import montclio.heimdall.dto.TagRfidFilter;
 import montclio.heimdall.model.TagRfId;
 import montclio.heimdall.service.TagRfidService;
+import montclio.heimdall.specification.TagRfidSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +27,8 @@ public class TagController {
     private TagRfidService tagService;
 
     @GetMapping
-    public ResponseEntity<Page<GetTagRfidDTO>> getAllTags(@PageableDefault (size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page){
-        return ResponseEntity.ok(tagService.getAllTags(page));
+    public ResponseEntity<Page<GetTagRfidDTO>> getAllTags(TagRfidFilter filter, @PageableDefault (size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page){
+        return ResponseEntity.ok(tagService.getAllTags(filter, page));
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,6 @@
 package montclio.heimdall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("users") // Ignora a propriedade 'users' em UserCategory durante a serialização para JSON
     private UserCategory userCategory;
 
 

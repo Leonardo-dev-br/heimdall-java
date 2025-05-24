@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import montclio.heimdall.dto.GetUserDTO;
 import montclio.heimdall.dto.PostUserDTO;
 import montclio.heimdall.dto.PutUserDTO;
+import montclio.heimdall.dto.UserFilter;
 import montclio.heimdall.model.User;
 import montclio.heimdall.service.UserService;
+import montclio.heimdall.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Listar todos os usuários com paginação
+    // Listar todos os usuários com paginação e filtros de pesquisas
     @GetMapping
     public ResponseEntity<Page<GetUserDTO>> getAllUsers(
+            UserFilter filter,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable page) {
-        return ResponseEntity.ok(userService.getAllUsers(page));
+        return ResponseEntity.ok(userService.getAllUsers(filter, page));
     }
 
     // Buscar usuário por ID
