@@ -1,0 +1,45 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body class="min-h-screen flex flex-col">
+  <div th:replace="fragments/nav :: nav"></div>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 flex-1">
+    <div class="mb-6">
+      <h2 th:text="${histId} != null ? 'Editar Histórico' : 'Novo Histórico'">Novo Histórico</h2>
+      <p class="subtitle text-sm mt-1">Registre uma atividade para a moto/vaga.</p>
+    </div>
+
+    <form th:action="${histId} != null ? @{|/parking/history/${histId}|} : @{|/parking/${idMoto}/history|}"
+          th:object="${historyDto}"
+          method="post"
+          class="space-y-4 bg-[rgba(255,255,255,0.02)] p-6 rounded">
+
+      <input type="hidden" th:if="${historyDto.idHistorico != null}" th:field="*{idHistorico}" />
+
+      <div>
+        <label class="block text-sm">Atividade</label>
+        <input type="text" th:field="*{atividade}" placeholder="Ex: Entrada, Saída, Manutenção" class="w-full p-2 rounded bg-[rgba(255,255,255,0.03)]"/>
+      </div>
+
+      <div>
+        <label class="block text-sm">Data / Hora</label>
+        <input type="datetime-local" th:field="*{dataAtividade}" class="w-full p-2 rounded bg-[rgba(255,255,255,0.03)]"/>
+      </div>
+
+
+      <div th:if="${idMoto != null}">
+        <label class="block text-sm">ID Moto / Vaga</label>
+        <input type="number" th:field="*{idMoto}" th:value="${idMoto}" readonly class="w-full p-2 rounded bg-[rgba(255,255,255,0.03)]"/>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="px-4 py-2 rounded" style="background:#03A64A;color:#023">Salvar</button>
+        <a th:href="@{|/parking/${idMoto}/history|}" class="px-4 py-2 rounded border border-[rgba(255,255,255,0.06)]">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
