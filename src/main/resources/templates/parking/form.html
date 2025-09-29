@@ -1,0 +1,43 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body class="min-h-screen flex flex-col">
+  <div th:replace="fragments/nav :: nav"></div>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 flex-1">
+    <div class="mb-6">
+      <h2 th:text="${parkingDto.id} != null ? 'Editar Vaga' : 'Nova Vaga'">Nova Vaga</h2>
+      <p class="subtitle text-sm">Preencha os dados da vaga.</p>
+    </div>
+
+    <form th:action="${parkingDto.id} != null ? @{|/parking/${parkingDto.id}|} : @{/parking}" th:object="${parkingDto}" method="post" class="space-y-4 bg-[rgba(255,255,255,0.02)] p-6 rounded">
+      <div>
+        <label class="block text-sm">Código da Vaga</label>
+        <input type="text" th:field="*{codVaga}" class="w-full p-2 rounded bg-[rgba(255,255,255,0.03)]" placeholder="Ex: A1"/>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm">Zona (idZona)</label>
+          <input type="number" th:field="*{idZona}" class="w-full p-2 rounded bg-[rgba(255,255,255,0.03)]"/>
+        </div>
+
+        <div>
+          <label class="block text-sm">Preenchida</label>
+          <select th:field="*{preenchida}" class="w-full p-2 rounded bg-[rgba(255,255,255,0.03)]">
+            <option th:value="true">Sim</option>
+            <option th:value="false">Não</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="px-4 py-2 rounded" style="background:#03A64A;color:#023">Salvar</button>
+        <a th:href="@{/parking}" class="px-4 py-2 rounded border border-[rgba(255,255,255,0.06)]">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

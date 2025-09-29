@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${title} ?: 'Pátio'">Pátio</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Montserrat:wght@400;600&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+            :root{
+            --bg: #024059;
+            --cta: #03A64A;
+            --title: #026873;
+            --text: #EDFDFE;
+            }
+        body { font-family: "Roboto", sans-serif; background-color: var(--bg); color: var(--text); }
+        h1,h2,h3,h4 { font-family: "Oswald", sans-serif; color: var(--title); }
+        .subtitle { font-family: "Montserrat", sans-serif; color: var(--text); }
+    </style>
+</head>
+</html>
