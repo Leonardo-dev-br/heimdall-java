@@ -22,7 +22,7 @@ public class ParkingSpace {
     private Long idZona;
 
     @Column(name = "preenchida", nullable = false)
-    private Integer preenchida; // armazenando 0/1 conforme seu DDL
+    private Integer preenchida;
 
     @Column(name = "cod_vaga", length = 10)
     private String codVaga;
@@ -48,5 +48,9 @@ public class ParkingSpace {
 
     public boolean isPreenchida() {
         return this.preenchida != null && this.preenchida == 1;
+    }
+    
+    public Long getIdVaga() {
+        return this.idVaga;
     }
 }

@@ -1,7 +1,5 @@
 package montclio.heimdall.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import montclio.heimdall.dto.ParkingSpaceDTO.GetParkingSpaceDTO;
 import montclio.heimdall.dto.ParkingSpaceDTO.PostParkingSpaceDTO;
@@ -9,55 +7,99 @@ import montclio.heimdall.dto.ParkingSpaceDTO.PutParkingSpaceDTO;
 import montclio.heimdall.dto.ParkingSpaceDTO.ParkingSpaceFilter;
 import montclio.heimdall.model.ParkingSpace;
 import montclio.heimdall.service.ParkingSpaceService;
+import montclio.heimdall.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URI;
-
-@RestController
-@RequestMapping("/parkingspaces")
-@Tag(name = "ParkingSpaces", description = "Gerencia vagas do pátio (Parking Space)")
+@Controller
+@RequestMapping("/parking")
 public class ParkingSpaceController {
 
     @Autowired
     private ParkingSpaceService parkingSpaceService;
 
-    @Operation(summary = "Lista parking spaces", description = "Retorna lista paginada de parking spaces")
     @GetMapping
-    public ResponseEntity<Page<GetParkingSpaceDTO>> getAllParkingSpaces(
-            ParkingSpaceFilter filter,
-            @PageableDefault(size = 5, sort = "idVaga", direction = Sort.Direction.ASC) Pageable page
-    ) {
-        return ResponseEntity.ok(parkingSpaceService.getAllParkingSpaces(filter, page));
+    public String list(ParkingSpaceFilter filter,
+                       @PageableDefault(size = 9, sort = "idVaga", direction = Sort.Direction.ASC) Pageable pageable,
+                       Model model) {
+        Page<GetParkingSpaceDTO> page = parkingSpaceService.getAllParkingSpaces(filter, pageable);
+        model.addAttribute("parkings", page.getContent());
+        model.addAttribute("page", page);
+        model.addAttribute("filter", filter);
+        return "parking/list";
     }
 
-    @Operation(summary = "Busca parking space por ID", description = "Retorna parking space por ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<GetParkingSpaceDTO> getParkingSpaceById(@PathVariable Long id) {
-        return ResponseEntity.ok(parkingSpaceService.getParkingSpaceById(id));
+    @GetMapping("/new")
+    public String newForm(Model model) {
+        model.addAttribute("parkingDto", new PostParkingSpaceDTO(null, null, false, ""));
+        return "parking/form";
     }
 
-    @Operation(summary = "Cria parking space", description = "Cadastra nova vaga (parking space)")
+
     @PostMapping
-    public ResponseEntity<Void> createParkingSpace(@Valid @RequestBody PostParkingSpaceDTO dto) {
-        ParkingSpace saved = parkingSpaceService.postParkingSpace(dto);
-        return ResponseEntity.created(URI.create("/parkingspaces/" + saved.getIdVaga())).build();
+    public String create(@ModelAttribute @Valid PostParkingSpaceDTO parkingDto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.parkingDto", bindingResult);
+            redirectAttributes.addFlashAttribute("parkingDto", parkingDto);
+            return "redirect:/parking/new";
+        }
+        ParkingSpace saved = parkingSpaceService.postParkingSpace(parkingDto);
+        redirectAttributes.addFlashAttribute("success", "Vaga criada (ID: " + saved.getIdVaga() + ")"); 
+        return "redirect:/parking";
     }
 
-    @Operation(summary = "Atualiza parking space", description = "Atualiza dados da vaga")
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateParkingSpace(@PathVariable Long id, @Valid @RequestBody PutParkingSpaceDTO dto) {
-        parkingSpaceService.putParkingSpace(id, dto);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            GetParkingSpaceDTO dto = parkingSpaceService.getParkingSpaceById(id);
+            PostParkingSpaceDTO formDto = new PostParkingSpaceDTO(dto.idVaga(), dto.idZona(), dto.preenchida(), dto.codVaga());
+            model.addAttribute("parkingDto", formDto);
+            return "parking/form";
+        } catch (ResourceNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/parking";
+        }
     }
 
-    @Operation(summary = "Remove parking space", description = "Deleta parking space por ID")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteParkingSpace(@PathVariable Long id) {
-        parkingSpaceService.deleteParkingSpace(id);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id,
+                         @ModelAttribute @Valid PutParkingSpaceDTO parkingUpdate,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.parkingDto", bindingResult);
+            redirectAttributes.addFlashAttribute("parkingDto", parkingUpdate);
+            return "redirect:/parking/" + id + "/edit";
+        }
+
+        try {
+            parkingSpaceService.putParkingSpace(id, parkingUpdate);
+            redirectAttributes.addFlashAttribute("success", "Vaga atualizada");
+        } catch (ResourceNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/parking";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            parkingSpaceService.deleteParkingSpace(id);
+            redirectAttributes.addFlashAttribute("success", "Vaga removida");
+        } catch (ResourceNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/parking";
     }
 }
