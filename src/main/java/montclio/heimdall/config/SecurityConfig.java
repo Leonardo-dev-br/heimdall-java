@@ -37,15 +37,14 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") 
-                .loginProcessingUrl("/authenticate")
+                .loginPage("/login")           
+                .loginProcessingUrl("/login")   
                 .defaultSuccessUrl("/histories", true)
                 .failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll()
             )
-
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
