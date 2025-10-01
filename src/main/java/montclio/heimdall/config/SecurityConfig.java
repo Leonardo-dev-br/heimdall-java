@@ -36,14 +36,15 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginPage("/login") 
+                .loginProcessingUrl("/authenticate") 
                 .defaultSuccessUrl("/dashboard", true)
                 .failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll()
             )
+
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
