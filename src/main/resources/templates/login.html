@@ -16,7 +16,9 @@
               'brand-dark': '#024059',
               'cta': '#03A64A',
               'title-color': '#026873',
-              'muted-text': '#EDFDFE'
+              'muted-text': '#EDFDFE',
+              'card-bg': '#026873',
+              'input-bg': '#034A5F'
             },
             fontFamily: {
               roboto: ['Roboto', 'ui-sans-serif', 'system-ui'],
@@ -37,7 +39,7 @@
 <body class="min-h-screen bg-brand-dark text-muted-text flex items-center justify-center">
 
   <main class="w-full max-w-md p-6">
-    <div class="bg-white rounded-2xl shadow-xl p-8">
+    <div class="bg-card-bg rounded-2xl shadow-xl p-8">
 
       <div class="text-center mb-6">
         <div class="mx-auto w-20 h-20 rounded-full bg-cta flex items-center justify-center shadow-md mb-3">
@@ -48,14 +50,14 @@
                  0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z" />
           </svg>
         </div>
-        <h1 class="text-3xl font-oswald text-title-color">Login</h1>
-        <p class="text-sm font-montserrat text-gray-600 mt-1">Use suas credenciais para acessar o sistema</p>
+        <h1 class="text-3xl font-oswald text-muted-text">Login</h1>
+        <p class="text-sm font-montserrat text-white/80 mt-1">Use suas credenciais para acessar o sistema</p>
       </div>
 
-      <div th:if="${param.error}" class="mb-3 p-3 rounded bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+      <div th:if="${param.error}" class="mb-3 p-3 rounded bg-red-600 text-white text-sm font-medium">
         Usuário ou senha inválidos.
       </div>
-      <div th:if="${param.logout}" class="mb-3 p-3 rounded bg-green-50 border border-green-200 text-green-700 text-sm font-medium">
+      <div th:if="${param.logout}" class="mb-3 p-3 rounded bg-green-600 text-white text-sm font-medium">
         Logout realizado com sucesso.
       </div>
 
@@ -63,30 +65,30 @@
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <div>
-          <label for="username" class="block text-sm font-montserrat text-gray-700 mb-1">E-mail</label>
+          <label for="username" class="block text-sm font-montserrat text-white mb-1">E-mail</label>
           <input id="username" name="username" type="email" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta focus:outline-none font-roboto text-gray-800" />
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta focus:outline-none font-roboto bg-input-bg text-white placeholder-white/70" placeholder="seu@email.com" />
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-montserrat text-gray-700 mb-1">Senha</label>
+          <label for="password" class="block text-sm font-montserrat text-white mb-1">Senha</label>
           <input id="password" name="password" type="password" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta focus:outline-none font-roboto text-gray-800" />
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta focus:outline-none font-roboto bg-input-bg text-white placeholder-white/70" placeholder="••••••••" />
         </div>
 
         <button type="submit"
-          class="w-full py-2 bg-cta hover:bg-green-600 text-white rounded-lg shadow font-montserrat font-semibold transition">
+          class="w-full py-2 bg-cta hover:bg-green-700 text-white rounded-lg shadow font-montserrat font-semibold transition">
           Entrar
         </button>
       </form>
 
       <div class="mt-5 text-center text-sm">
-        <span class="text-gray-600">Ainda não tem conta?</span>
+        <span class="text-white/80">Ainda não tem conta?</span>
         <a th:href="@{/register}" class="text-cta font-semibold underline">Cadastre-se</a>
       </div>
     </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <p class="text-xs text-center text-white/60 mt-6 font-roboto">© 2025 Mont Clio</p>
   </main>
 
 </body>
