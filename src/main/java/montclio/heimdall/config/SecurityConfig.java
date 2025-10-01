@@ -2,6 +2,7 @@ package montclio.heimdall.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -31,9 +32,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
+                .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .requestMatchers("/css/**","/js/**","/images/**","/webjars/**").permitAll()
-                .requestMatchers("/login", "/authenticate", "/register", "/error").permitAll()
-
+                .requestMatchers("/authenticate", "/register", "/error").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
