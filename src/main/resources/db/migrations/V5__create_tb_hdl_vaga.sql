@@ -1,0 +1,44 @@
+DECLARE
+  v_table_count  NUMBER;
+  v_seq_count    NUMBER;
+  v_trg_count    NUMBER;
+  v_max_id       NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_table_count FROM user_tables WHERE table_name = 'TB_HDL_VAGA';
+  IF v_table_count = 0 THEN
+    EXECUTE IMMEDIATE q'[
+      CREATE TABLE TB_HDL_VAGA (
+        ID_VAGA      NUMBER(19,0),
+        ID_ZONA      NUMBER(19,0) NOT NULL,
+        PREENCHIDA   NUMBER(1) DEFAULT 0 NOT NULL,
+        COD_VAGA     VARCHAR2(10)
+      )
+    ]';
+    EXECUTE IMMEDIATE 'ALTER TABLE TB_HDL_VAGA ADD CONSTRAINT PK_TB_HDL_VAGA PRIMARY KEY (ID_VAGA)';
+    EXECUTE IMMEDIATE 'ALTER TABLE TB_HDL_VAGA ADD CONSTRAINT CHK_TB_HDL_VAGA_PREENCH CHECK (PREENCHIDA IN (0,1))';
+  END IF;
+
+  SELECT COUNT(*) INTO v_seq_count FROM user_sequences WHERE sequence_name = 'SEQ_TB_HDL_VAGA';
+  IF v_seq_count = 0 THEN
+    BEGIN
+      SELECT NVL(MAX(ID_VAGA),0) INTO v_max_id FROM TB_HDL_VAGA;
+    EXCEPTION WHEN OTHERS THEN
+      v_max_id := 0;
+    END;
+    EXECUTE IMMEDIATE 'CREATE SEQUENCE SEQ_TB_HDL_VAGA START WITH ' || (v_max_id + 1) || ' INCREMENT BY 1 NOCACHE NOCYCLE';
+  END IF;
+
+  SELECT COUNT(*) INTO v_trg_count FROM user_triggers WHERE trigger_name = 'TRG_TB_HDL_VAGA_BI';
+  IF v_trg_count = 0 THEN
+    EXECUTE IMMEDIATE q'[
+      CREATE OR REPLACE TRIGGER TRG_TB_HDL_VAGA_BI
+      BEFORE INSERT ON TB_HDL_VAGA
+      FOR EACH ROW
+      WHEN (new.ID_VAGA IS NULL)
+      BEGIN
+        SELECT SEQ_TB_HDL_VAGA.NEXTVAL INTO :new.ID_VAGA FROM dual;
+      END;
+    ]';
+  END IF;
+END;
+/

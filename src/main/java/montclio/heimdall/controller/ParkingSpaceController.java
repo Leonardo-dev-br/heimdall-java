@@ -34,28 +34,34 @@ public class ParkingSpaceController {
         model.addAttribute("parkings", page.getContent());
         model.addAttribute("page", page);
         model.addAttribute("filter", filter);
+
+        model.addAttribute("parkingList", page.getContent());
         return "parking/list";
     }
 
+
     @GetMapping("/new")
     public String newForm(Model model) {
-        model.addAttribute("parkingDto", new PostParkingSpaceDTO(null, null, false, ""));
+        PostParkingSpaceDTO dto = new PostParkingSpaceDTO(null, null, false, "");
+        model.addAttribute("parkingDto", dto);
+        model.addAttribute("parking", dto); 
         return "parking/form";
     }
 
 
     @PostMapping
-    public String create(@ModelAttribute @Valid PostParkingSpaceDTO parkingDto,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute("parkingDto") @Valid PostParkingSpaceDTO parkingDto,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.parkingDto", bindingResult);
             redirectAttributes.addFlashAttribute("parkingDto", parkingDto);
             return "redirect:/parking/new";
         }
+
         ParkingSpace saved = parkingSpaceService.postParkingSpace(parkingDto);
-        redirectAttributes.addFlashAttribute("success", "Vaga criada (ID: " + saved.getIdVaga() + ")"); 
+        redirectAttributes.addFlashAttribute("success", "Vaga criada (ID: " + saved.getIdVaga() + ")");
         return "redirect:/parking";
     }
 
@@ -65,6 +71,7 @@ public class ParkingSpaceController {
             GetParkingSpaceDTO dto = parkingSpaceService.getParkingSpaceById(id);
             PostParkingSpaceDTO formDto = new PostParkingSpaceDTO(dto.idVaga(), dto.idZona(), dto.preenchida(), dto.codVaga());
             model.addAttribute("parkingDto", formDto);
+            model.addAttribute("parking", formDto);
             return "parking/form";
         } catch (ResourceNotFoundException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
@@ -74,17 +81,18 @@ public class ParkingSpaceController {
 
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
-                         @ModelAttribute @Valid PutParkingSpaceDTO parkingUpdate,
+                         @ModelAttribute("parkingDto") @Valid PostParkingSpaceDTO parkingDto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.parkingDto", bindingResult);
-            redirectAttributes.addFlashAttribute("parkingDto", parkingUpdate);
+            redirectAttributes.addFlashAttribute("parkingDto", parkingDto);
             return "redirect:/parking/" + id + "/edit";
         }
 
         try {
-            parkingSpaceService.putParkingSpace(id, parkingUpdate);
+            PutParkingSpaceDTO updateDto = new PutParkingSpaceDTO(parkingDto.idZona(), parkingDto.preenchida(), parkingDto.codVaga());
+            parkingSpaceService.putParkingSpace(id, updateDto);
             redirectAttributes.addFlashAttribute("success", "Vaga atualizada");
         } catch (ResourceNotFoundException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
@@ -101,5 +109,15 @@ public class ParkingSpaceController {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/parking";
+    }
+
+    @GetMapping("/{id}/history")
+    public String redirectToHistory(@PathVariable Long id) {
+        return "redirect:/histories?vehicleId=" + id;
+    }
+
+    @GetMapping("/{id}/history/new")
+    public String redirectToNewHistory(@PathVariable Long id) {
+        return "redirect:/histories/new?vehicleId=" + id;
     }
 }

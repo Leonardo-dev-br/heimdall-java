@@ -10,7 +10,6 @@ import montclio.heimdall.dto.HistoryDTO.PutHistoryDTO;
 import montclio.heimdall.model.HistoryMoto;
 import montclio.heimdall.service.HistoryService;
 import montclio.heimdall.exception.ResourceNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,20 +29,37 @@ public class HistoryController {
 
     @Operation(summary = "Lista históricos", description = "Retorna lista paginada de históricos")
     @GetMapping
-    public String list(HistoryFilter filter, Pageable page, Model model) {
+    public String list(HistoryFilter filter, Pageable page, Model model,
+                       @RequestParam(value = "vehicleId", required = false) Long vehicleId,
+                       @RequestParam(value = "idMoto", required = false) Long idMotoParam) {
+
+        // vehicleId pode vir como vehicleId ou idMoto (compatibilidade)
+        Long effectiveVehicleId = vehicleId != null ? vehicleId : idMotoParam;
+
         Page<GetHistoryDTO> historiesPage = historyService.getAllHistoricos(filter, page);
         model.addAttribute("histories", historiesPage.getContent());
         model.addAttribute("page", historiesPage);
         model.addAttribute("filter", filter);
+
+        // atributos compatíveis com templates
+        model.addAttribute("vehicleId", effectiveVehicleId);
+        model.addAttribute("idMoto", effectiveVehicleId);
+
         return "parking/history";
     }
 
     @Operation(summary = "Formulário - novo histórico", description = "Exibe formulário para criar histórico")
     @GetMapping("/new")
-    public String newForm(@RequestParam(value = "vehicleId", required = false) Long vehicleId, Model model) {
-        PostHistoryDTO newHistory = new PostHistoryDTO(null, vehicleId, null, "");
-        model.addAttribute("history", newHistory);
-        model.addAttribute("vehicleId", vehicleId);
+    public String newForm(@RequestParam(value = "vehicleId", required = false) Long vehicleId,
+                          @RequestParam(value = "idMoto", required = false) Long idMotoParam,
+                          Model model) {
+        Long effectiveVehicleId = vehicleId != null ? vehicleId : idMotoParam;
+        PostHistoryDTO newHistory = new PostHistoryDTO(null, effectiveVehicleId, null, "");
+        // adiciona com o nome que o template espera
+        model.addAttribute("historyDto", newHistory);
+        model.addAttribute("history", newHistory); // alias para compatibilidade
+        model.addAttribute("vehicleId", effectiveVehicleId);
+        model.addAttribute("idMoto", effectiveVehicleId);
         return "parking/history_form";
     }
 
@@ -59,9 +75,11 @@ public class HistoryController {
                 existingHistory.atividade()
             );
 
-            model.addAttribute("history", historyUpdate);
+            model.addAttribute("historyDto", historyUpdate);
+            model.addAttribute("history", historyUpdate); // alias
             model.addAttribute("historyId", id);
             model.addAttribute("vehicleId", existingHistory.idMoto());
+            model.addAttribute("idMoto", existingHistory.idMoto());
             return "parking/history_form";
         } catch (ResourceNotFoundException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
@@ -71,50 +89,54 @@ public class HistoryController {
 
     @Operation(summary = "Cria um histórico", description = "Cadastra um novo histórico via formulário")
     @PostMapping
-    public String createHistory(@ModelAttribute @Valid PostHistoryDTO newHistory,
+    public String createHistory(@ModelAttribute("historyDto") @Valid PostHistoryDTO historyDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.history", bindingResult);
-            redirectAttributes.addFlashAttribute("history", newHistory);
-            return "redirect:/histories/new" + (newHistory.idMoto() != null ? "?vehicleId=" + newHistory.idMoto() : "");
+            // a chave do BindingResult precisa usar o mesmo name do model attribute
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.historyDto", bindingResult);
+            redirectAttributes.addFlashAttribute("historyDto", historyDto);
+            Long redirectVehicle = historyDto.idMoto();
+            return "redirect:/histories/new" + (redirectVehicle != null ? "?vehicleId=" + redirectVehicle : "");
         }
 
-        HistoryMoto saved = historyService.postHistorico(newHistory);
+        HistoryMoto saved = historyService.postHistorico(historyDto);
         redirectAttributes.addFlashAttribute("success", "Histórico criado (ID: " + saved.getIdHistorico() + ")");
-        return "redirect:/histories";
+        return "redirect:/histories" + (historyDto.idMoto() != null ? "?vehicleId=" + historyDto.idMoto() : "");
     }
 
     @Operation(summary = "Atualiza histórico", description = "Atualiza dados do histórico via formulário")
     @PostMapping("/{id}")
     public String updateHistory(@PathVariable Long id,
-                                @ModelAttribute @Valid PutHistoryDTO historyUpdate,
+                                @ModelAttribute("historyDto") @Valid PutHistoryDTO historyDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.history", bindingResult);
-            redirectAttributes.addFlashAttribute("history", historyUpdate);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.historyDto", bindingResult);
+            redirectAttributes.addFlashAttribute("historyDto", historyDto);
             return "redirect:/histories/" + id;
         }
 
         try {
-            historyService.putHistorico(id, historyUpdate);
+            historyService.putHistorico(id, historyDto);
             redirectAttributes.addFlashAttribute("success", "Histórico atualizado com sucesso");
         } catch (ResourceNotFoundException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }
-        return "redirect:/histories";
+        return "redirect:/histories" + (historyDto.idMoto() != null ? "?vehicleId=" + historyDto.idMoto() : "");
     }
 
     @Operation(summary = "Remove histórico", description = "Deleta histórico por ID via formulário")
     @PostMapping("/{id}/delete")
-    public String deleteHistory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteHistory(@PathVariable Long id,
+                                @RequestParam(value = "vehicleId", required = false) Long vehicleId,
+                                RedirectAttributes redirectAttributes) {
         try {
             historyService.deleteHistorico(id);
             redirectAttributes.addFlashAttribute("success", "Histórico removido");
         } catch (ResourceNotFoundException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }
-        return "redirect:/histories";
+        return "redirect:/histories" + (vehicleId != null ? "?vehicleId=" + vehicleId : "");
     }
 }

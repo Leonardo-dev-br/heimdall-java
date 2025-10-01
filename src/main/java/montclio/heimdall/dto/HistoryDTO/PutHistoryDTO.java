@@ -1,10 +1,13 @@
 package montclio.heimdall.dto.HistoryDTO;
 
-import montclio.heimdall.model.MotorcycleType;
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 
 public record PutHistoryDTO(
         Long idMoto,
-        java.time.LocalDate dataAtividade,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataAtividade,
         String atividade
 ) {
 }

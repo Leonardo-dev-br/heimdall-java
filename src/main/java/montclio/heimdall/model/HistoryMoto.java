@@ -18,7 +18,10 @@ public class HistoryMoto {
 
     @Id
     @Column(name = "id_historico")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_historico")
+    @SequenceGenerator(name = "seq_historico", sequenceName = "SEQ_TB_HDL_HISTORICO_MOTO", allocationSize = 1)
     private Long idHistorico;
+
 
     @Column(name = "id_moto", nullable = false)
     private Long idMoto;
@@ -47,4 +50,37 @@ public class HistoryMoto {
             this.idMoto = dto.idMoto();
         }
     }
+
+    public Long getIdHistorico() {
+        return idHistorico;
+    }
+
+    public void setIdHistorico(Long idHistorico) {
+        this.idHistorico = idHistorico;
+    }
+
+    public Long getIdMoto() {
+        return idMoto;
+    }
+
+    public void setIdMoto(Long idMoto) {
+        this.idMoto = idMoto;
+    }
+
+    public LocalDate getDataAtividade() {
+        return dataAtividade;
+    }
+
+    public void setDataAtividade(LocalDate dataAtividade) {
+        this.dataAtividade = dataAtividade;
+    }
+
+    public String getAtividade() {
+        return atividade;
+    }
+
+    public void setAtividade(String atividade) {
+        this.atividade = atividade;
+    }
+
 }

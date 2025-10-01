@@ -16,6 +16,8 @@ public class ParkingSpace {
 
     @Id
     @Column(name = "id_vaga")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_vaga")
+    @SequenceGenerator(name = "seq_vaga", sequenceName = "SEQ_TB_HDL_VAGA", allocationSize = 1)
     private Long idVaga;
 
     @Column(name = "id_zona", nullable = false)
