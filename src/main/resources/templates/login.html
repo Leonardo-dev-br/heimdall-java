@@ -13,12 +13,12 @@
         theme: {
           extend: {
             colors: {
-              'brand-dark': '#024059',
-              'cta': '#03A64A',
-              'title-color': '#026873',
-              'muted-text': '#EDFDFE',
-              'card-bg': '#026873',
-              'input-bg': '#034A5F'
+              'brand-dark': '#1a3c34',
+              'cta': '#8bc34a',
+              'title-color': '#3e8e41',
+              'muted-text': '#c6f4d6',
+              'card-bg': '#3e8e41',
+              'input-bg': '#c6f4d6'
             },
             fontFamily: {
               roboto: ['Roboto', 'ui-sans-serif', 'system-ui'],
@@ -36,13 +36,13 @@
     body { font-family: Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial; }
   </style>
 </head>
-<body class="min-h-screen bg-brand-dark text-muted-text flex items-center justify-center">
+<body class="min-h-screen bg-[#1a3c34] text-white flex items-center justify-center">
 
   <main class="w-full max-w-md p-6">
-    <div class="bg-card-bg rounded-2xl shadow-xl p-8">
+    <div class="bg-[#3e8e41] rounded-2xl shadow-xl p-8">
 
       <div class="text-center mb-6">
-        <div class="mx-auto w-20 h-20 rounded-full bg-cta flex items-center justify-center shadow-md mb-3">
+        <div class="mx-auto w-20 h-20 rounded-full bg-[#8bc34a] flex items-center justify-center shadow-md mb-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
@@ -50,7 +50,7 @@
                  0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z" />
           </svg>
         </div>
-        <h1 class="text-3xl font-oswald text-muted-text">Login</h1>
+        <h1 class="text-3xl font-oswald text-white">Login</h1>
         <p class="text-sm font-montserrat text-white/80 mt-1">Use suas credenciais para acessar o sistema</p>
       </div>
 
@@ -67,28 +67,28 @@
         <div>
           <label for="username" class="block text-sm font-montserrat text-white mb-1">E-mail</label>
           <input id="username" name="username" type="email" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta focus:outline-none font-roboto bg-input-bg text-white placeholder-white/70" placeholder="seu@email.com" />
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8bc34a] focus:outline-none font-roboto bg-[#c6f4d6] text-[#1a3c34] placeholder-[#1a3c3480]" placeholder="seu@email.com" />
         </div>
 
         <div>
           <label for="password" class="block text-sm font-montserrat text-white mb-1">Senha</label>
           <input id="password" name="password" type="password" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta focus:outline-none font-roboto bg-input-bg text-white placeholder-white/70" placeholder="••••••••" />
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8bc34a] focus:outline-none font-roboto bg-[#c6f4d6] text-[#1a3c34] placeholder-[#1a3c3480]" placeholder="••••••••" />
         </div>
 
         <button type="submit"
-          class="w-full py-2 bg-cta hover:bg-green-700 text-white rounded-lg shadow font-montserrat font-semibold transition">
+          class="w-full py-2 bg-[#8bc34a] hover:bg-[#6f9e3e] text-white rounded-lg shadow font-montserrat font-semibold transition">
           Entrar
         </button>
       </form>
 
       <div class="mt-5 text-center text-sm">
         <span class="text-white/80">Ainda não tem conta?</span>
-        <a th:href="@{/register}" class="text-cta font-semibold underline">Cadastre-se</a>
+        <a th:href="@{/register}" class="text-[#8bc34a] font-semibold underline">Cadastre-se</a>
       </div>
     </div>
 
-    <p class="text-xs text-center text-white/60 mt-6 font-roboto">© 2025 Mont Clio</p>
+    <p class="text-xs text-center text-white/60 mt-6 font-roboto"> 2025 Mont Clio</p>
   </main>
 
 </body>
