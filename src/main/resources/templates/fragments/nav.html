@@ -1,15 +1,15 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body th:fragment="nav">
-  <header class="bg-[rgba(0,0,0,0.12)]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-      <a th:href="@{/}" class="text-xl font-semibold text-white">Mottu · Pátio</a>
+  <div th:fragment="nav">
+    <header class="bg-[rgba(0,0,0,0.12)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <a th:href="@{/}" class="text-xl font-semibold text-white">Mottu · Pátio</a>
 
-      <nav class="flex items-center gap-4">
-        <a th:href="@{/parking}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.06)]">Estacionamento</a>
-        <a th:href="@{/}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.06)]">Dashboard</a>
-      </nav>
-    </div>
-  </header>
-</body>
+        <nav class="flex items-center gap-4">
+          <a th:href="@{/parking}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.06)]">Estacionamento</a>
+          <a th:href="@{/}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.06)]">Dashboard</a>
+        </nav>
+      </div>
+    </header>
+  </div>
 </html>

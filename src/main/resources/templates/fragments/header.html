@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="head">
+  <head th:fragment="head">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${title} ?: 'Pátio'">Pátio</title>
@@ -9,15 +9,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-            :root{
-            --bg: #024059;
-            --cta: #03A64A;
-            --title: #026873;
-            --text: #EDFDFE;
-            }
-        body { font-family: "Roboto", sans-serif; background-color: var(--bg); color: var(--text); }
-        h1,h2,h3,h4 { font-family: "Oswald", sans-serif; color: var(--title); }
-        .subtitle { font-family: "Montserrat", sans-serif; color: var(--text); }
+      :root{
+        --bg: #024059;
+        --cta: #03A64A;
+        --title: #026873;
+        --text: #EDFDFE;
+      }
+      body { font-family: "Roboto", sans-serif; background-color: var(--bg); color: var(--text); }
+      h1,h2,h3,h4 { font-family: "Oswald", sans-serif; color: var(--title); }
+      .subtitle { font-family: "Montserrat", sans-serif; color: var(--text); }
     </style>
-</head>
+  </head>
 </html>
