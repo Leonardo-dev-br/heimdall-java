@@ -28,7 +28,7 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("users") // Ignora a propriedade 'users' em UserCategory durante a serialização para JSON
+    @JsonIgnoreProperties("users")
     private UserCategory userCategory;
 
     public User(PostUserDTO dto) {
